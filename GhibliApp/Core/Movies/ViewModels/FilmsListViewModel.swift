@@ -9,7 +9,7 @@ import Foundation
 
 @MainActor
 @Observable
-final class FilmsListViewModel {
+class FilmsListViewModel {
     var films = [Film]()
     var isLoading = false
     var errorMessage: String?
