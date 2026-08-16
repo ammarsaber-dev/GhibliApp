@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct GhibliAppApp: App {
+    @State private var favorites = FavoritesStore()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(favorites)
         }
     }
 }

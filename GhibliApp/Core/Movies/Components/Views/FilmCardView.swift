@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct FilmCardView: View {
+    @Environment(FavoritesStore.self) private var favorites
+
     let film: Film
     var body: some View {
         HStack {
@@ -18,28 +20,31 @@ struct FilmCardView: View {
             }
             .scaledToFill()
             .frame(width: 100, height: 160)
-            .padding(.trailing)
-            
+            .padding(.trailing, 8)
+
             VStack(alignment: .leading) {
                 HStack {
                     Text(film.title)
                         .font(.headline)
                         .fontWeight(.semibold)
-                    
+
                     Spacer()
-                    
+
                     Button {
-                        
+//                        favorites.toggle(film.id)
                     } label: {
-                        Image(systemName: "heart.fill")
-                            .tint(.red)
+                        Image(
+                            systemName: favorites.isFavorite(film.id)
+                                ? "heart.fill" : "heart"
+                        )
+                        .tint(.red)
                     }
                 }
-                
+
                 VStack(alignment: .leading) {
                     Text("Directed by \(film.director)")
                         .font(.footnote)
-                    
+
                     Text("Released: \(film.releaseDate)")
                         .font(.caption)
                 }
@@ -52,4 +57,5 @@ struct FilmCardView: View {
 
 #Preview {
     FilmCardView(film: .sample)
+        .environment(FavoritesStore())
 }

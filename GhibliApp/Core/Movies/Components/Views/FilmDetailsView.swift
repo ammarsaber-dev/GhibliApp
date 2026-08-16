@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct FilmDetailsView: View {
+    @Environment(FavoritesStore.self) var favorites
+    
     @State private var viewModel: FilmDetailsViewModel
 
     init(film: Film) {
@@ -181,10 +183,11 @@ struct FilmDetailsView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-
+                    favorites.toggle(film.id)
                 } label: {
-                    Label("Mark as favourite", systemImage: "heart")
+                    Label("Mark as favourite", systemImage: favorites.isFavorite(film.id) ? "heart.fill" : "heart")
                 }
+                .tint(.red)
             }
         }
     }
@@ -192,4 +195,5 @@ struct FilmDetailsView: View {
 
 #Preview {
     FilmDetailsView(film: .sample)
+        .environment(FavoritesStore())
 }

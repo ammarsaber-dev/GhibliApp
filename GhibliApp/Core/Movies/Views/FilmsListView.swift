@@ -8,21 +8,21 @@
 import SwiftUI
 
 struct FilmsListView: View {
-    @State private var viewModel = FilmsListViewModel()
+    @Environment(FilmsListViewModel.self) private var filmsVM
 
     var body: some View {
         NavigationStack {
             Group {
-                if viewModel.isLoading {
+                if filmsVM.isLoading {
                     ProgressView("Loading films...")
-                } else if let errorMessage = viewModel.errorMessage {
+                } else if let errorMessage = filmsVM.errorMessage {
                     ContentUnavailableView(
                         "Error",
                         systemImage: "exclamationmark.triangle",
                         description: Text(errorMessage)
                     )
                 } else {
-                    List(viewModel.films) { film in
+                    List(filmsVM.films) { film in
                         NavigationLink(value: film) {
                             FilmCardView(film: film)
                         }
@@ -30,7 +30,7 @@ struct FilmsListView: View {
                 }
             }
             .task {
-                await viewModel.fetchAllFilms()
+                await filmsVM.fetchAllFilms()
             }
             .navigationTitle("Ghibli Films")
             .navigationDestination(for: Film.self) { film in
@@ -42,4 +42,6 @@ struct FilmsListView: View {
 
 #Preview {
     FilmsListView()
+        .environment(FilmsListViewModel())
+        .environment(FavoritesStore())
 }
